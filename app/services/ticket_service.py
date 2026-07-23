@@ -10,46 +10,25 @@ class TicketService:
     async def create_ticket(self,payload: CreateTicketRequest):
         return await self.repo.create(payload)
     
-    async def get_ticket(
-        self,
-        ticket_id: UUID
-    ):
+    async def get_ticket(self,ticket_id: UUID):
         return await self.repo.get_by_id(ticket_id) 
-    async def get_all_tickets(
-        self,
-        id=None,
-        status=None,
-        priority=None
-    ):
-        return await self.repo.get_all(
-            id,
-            status,
-            priority
-        )
     
-    async def update_ticket(
-        self,
-        ticket_id: UUID,
-        payload: UpdateTicketRequest
-    ):
+    async def get_all_tickets(self,id=None,status=None,priority=None):
+        return await self.repo.get_all(id,status,priority)
+    
+    async def update_ticket(self,ticket_id: UUID,payload: UpdateTicketRequest):
         ticket = await self.repo.get_by_id(ticket_id)
         if ticket is None:
             raise TicketNotFoundError()
         if (ticket.status == "closed"and payload.status == "open"):
             raise TicketClosedError()
-        return await self.repo.update(
-            ticket,
-            payload
-        )
+        return await self.repo.update(ticket,payload)
     
-    async def delete_ticket(
-        self,
-        ticket_id: UUID
-    ):
-
-        ticket = await self.repo.get_by_id(
-            ticket_id
-        )
+    async def delete_ticket(self,ticket_id: UUID):
+        ticket = await self.repo.get_by_id(ticket_id)
         if ticket is None:
             raise TicketNotFoundError()
         await self.repo.delete(ticket)
+        return {
+            "message": "Ticket deleted successfully"
+        }

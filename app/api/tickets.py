@@ -22,7 +22,7 @@ async def get_tickets(
 ):
     return await service.get_all_tickets(id,status,priority)
 
-@router.post("/")
+@router.post("/",status_code=201)
 async def create_ticket(
     payload: CreateTicketRequest,
     service: TicketService = Depends(get_service)

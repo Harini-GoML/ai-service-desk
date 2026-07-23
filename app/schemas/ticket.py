@@ -1,14 +1,6 @@
-from datetime import datetime
-from uuid import UUID
 from typing import Optional, Literal
 
-from pydantic import (
-    BaseModel,
-    Field,
-    ConfigDict,
-    field_validator,
-    computed_field,
-)
+from pydantic import (BaseModel,Field,field_validator)
 
 class CreateTicketRequest(BaseModel):
     title: str = Field(..., min_length=3, max_length=200)
@@ -24,6 +16,7 @@ class CreateTicketRequest(BaseModel):
             raise ValueError("Title cannot be blank")
 
         return value
+
 
 class UpdateTicketRequest(BaseModel):
     title: Optional[str] = None
@@ -45,17 +38,11 @@ class UpdateTicketRequest(BaseModel):
             raise ValueError("Title cannot be blank")
 
         return value
-
-# class TicketResponse(BaseModel):
-#     id: UUID
-#     title: str
-#     priority: Literal["low", "medium", "high"]
-#     status: Literal["open", "in_progress", "resolved", "closed"]
-#     created_at: datetime
-
-#     model_config = ConfigDict(from_attributes=True)
-
-#     @computed_field
-#     @property
-#     def is_resolved(self) -> bool:
-#         return self.status == "resolved"
+    
+class SummarizeRequest(BaseModel):
+    ticket_description: str = Field(min_length=10, max_length=5_000)
+ 
+ 
+class SummarizeResponse(BaseModel):
+    summary: str
+    suggested_response: str

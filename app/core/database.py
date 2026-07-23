@@ -5,14 +5,13 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from app.core.config import settings
+from sqlalchemy.pool import NullPool
 
 
 engine = create_async_engine(
     settings.DATABASE_URL,
-    echo=True,    #to print in terminal
-    pool_size=5,
-    max_overflow=10,
-    pool_recycle=1800,
+    echo=True,
+    poolclass=NullPool,
 )
 
 AsyncSessionLocal = async_sessionmaker(

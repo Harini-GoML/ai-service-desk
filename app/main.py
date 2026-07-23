@@ -1,16 +1,15 @@
+import time 
+
 from fastapi import FastAPI, Request
 from app.api.tickets import router as ticket_router
+from app.api.ai import router as ai
 from app.core.config import settings
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from fastapi.responses import JSONResponse
 from app.core.database import engine
-import time 
 
-app = FastAPI(
-    title=settings.APP_NAME,
-    version=settings.API_VERSION
-)
+app = FastAPI(title=settings.APP_NAME,version=settings.API_VERSION)
 
 app.add_middleware(
     CORSMiddleware,
@@ -54,6 +53,7 @@ async def readiness_check():
         )
     
 app.include_router(ticket_router)
+app.include_router(ai)
 
 @app.get("/")
 def home():

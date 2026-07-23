@@ -1,4 +1,3 @@
-# crud op
 from typing import Optional
 from uuid import UUID
 
@@ -15,7 +14,6 @@ class TicketRepository:
             **payload.model_dump()
         )
         self.db.add(ticket)
-        print(Ticket.assignee_email)
         await self.db.flush()
         await self.db.refresh(ticket)
         return ticket
@@ -48,11 +46,7 @@ class TicketRepository:
     
     async def update(self,ticket,payload):
         for field, value in payload.model_dump(exclude_unset=True).items():#update dynamically
-            setattr(
-                ticket,
-                field,
-                value
-            )
+            setattr(ticket,field,value)
         await self.db.flush()
         await self.db.refresh(ticket)
         return ticket
